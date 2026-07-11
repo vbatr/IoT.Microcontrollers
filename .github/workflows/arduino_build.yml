@@ -27,15 +27,29 @@ jobs:
           arduino-cli core update-index
           arduino-cli core install arduino:avr
 
-      # Compile sketch code
-      - name: Compile Sketch
+      # Compile sketch code from all *.ino files
+      - name: Compile all sketch files
         run: |
-          arduino-cli compile --fqbn arduino:avr:uno ./examples/blink.ino --output-dir ./build
+          mkdir -p ./all-hex-files
+
+          # Loop through every .ino file in the examples folder
+          find examples -name "*.ino" | while read -r sketch; do
+            echo "Compiling $sketch..."
+            
+            # Extract filename
+            name=$(basename "$sketch" .ino)
+            
+            # Compile to a temporary directory
+            arduino-cli compile --fqbn arduino:avr:uno --output-dir "./temp_$name" "$sketch"
+            
+            # Move the generated hex file to our central artifact folder with a unique name
+            mv ./temp_$name/*.hex ./all-hex-files/${name}.hex
+          done
           
       # Upload artifacts to Github
-      - name: Upload Hex Artifact
+      - name: Upload all Hex Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: arduino-hex-binary
-          path: ./build/*.hex
+          name: all-arduino-binaries
+          path: ./all-hex-files/*.hex
           if-no-files-found: error
