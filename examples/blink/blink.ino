@@ -1,4 +1,4 @@
-const int delay = 3000;
+const int ledDelay = 3000;
 
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
@@ -8,7 +8,7 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
   digitalWrite(LED_BUILTIN, HIGH);  // change state of the LED by setting the pin to the HIGH voltage level
-  delay(delay);                      // wait for a second
+  delay(ledDelay);                      // wait for a second
   digitalWrite(LED_BUILTIN, LOW);   // change state of the LED by setting the pin to the LOW voltage level
-  delay(delay);                      // wait for a second
+  delay(ledDelay);                      // wait for a second
 }
