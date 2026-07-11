@@ -43,7 +43,7 @@ jobs:
             arduino-cli compile --fqbn arduino:avr:uno --output-dir "./temp_$name" "$sketch"
             
             # Move the generated hex file to our central artifact folder with a unique name
-            mv ./temp_$name/*.hex ./all-hex-files/${name}.hex
+            mv "./temp_$name/${name}.ino.hex" "./all-hex-files/${name}.hex"
           done
           
       # Upload artifacts to Github
