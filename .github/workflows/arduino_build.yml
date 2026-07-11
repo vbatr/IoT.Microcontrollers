@@ -1,0 +1,41 @@
+name: Compile application
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout working repository
+      - name: Checkout working-directory
+        uses: actions/checkout@v4
+
+      # Install Arduino CLI on build agent      
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
+
+      # Install Arduino bard core libs
+      - name: Install Board Core
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install arduino:avr
+
+      # Compile sketch code
+      - name: Compile Sketch
+        run: |
+          arduino-cli compile --fqbn arduino:avr:uno ./examples --output-dir ./build
+          
+      # Upload artifacts to Github
+      - name: Upload Hex Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: arduino-hex-binary
+          path: ./build/*.hex
+          if-no-files-found: error
