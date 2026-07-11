@@ -30,7 +30,7 @@ jobs:
       # Compile sketch code
       - name: Compile Sketch
         run: |
-          arduino-cli compile --fqbn arduino:avr:uno ./examples --output-dir ./build/blink.ino
+          arduino-cli compile --fqbn arduino:avr:uno ./examples/blink.ino --output-dir ./build
           
       # Upload artifacts to Github
       - name: Upload Hex Artifact
